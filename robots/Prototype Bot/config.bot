@@ -45,14 +45,14 @@ devices:
     position:
     - 0.0
     - 7.0
-    rotation: 0
+    rotation: 90.0
     zPos: 3.9375
 - UltrasonicSensor:
     port: in4
     position:
     - -7.0
     - 0.0
-    rotation: 0
+    rotation: 180.0
     zPos: 3.96875
 - InfraredSensor:
     port: in3
