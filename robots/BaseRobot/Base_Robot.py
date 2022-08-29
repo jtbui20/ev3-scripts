@@ -1,4 +1,4 @@
-#!/usr/bin/env 3
+#!/usr/bin/env python3
 
 # Import the motors we're going to be using
 from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedPercent
@@ -6,9 +6,9 @@ from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, Sp
 from ev3dev2.sensor import Sensor, INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import UltrasonicSensor
 # We're going to be doing a ton of math
-import math
-import numpy as np
-import time
+import math, numpy as np, time
+
+import threading
 
 class Base_Robot:
   def __init__(self, Brick = False, Debug = False):
@@ -24,8 +24,7 @@ class Base_Robot:
     self._OC = LargeMotor(OUTPUT_C);
     self._OD = LargeMotor(OUTPUT_D);
 
-    if self.Debug:
-      print("Motors are online")
+    if Debug: print("Motors are online")
 
     # These are fields for our input sensors
     self.USonW = UltrasonicSensor(INPUT_1);
@@ -36,8 +35,7 @@ class Base_Robot:
     self.IRSen = Sensor(INPUT_3, driver_name="ht-nxt-ir-seek-v2")
     self.IRSen.mode = "AC-ALL"
 
-    if Debug:
-      print("Sensors are online")
+    if Debug: print("Sensors are online")
 
   '''Calibration Process'''
   def Calibrate(self, length):
@@ -52,7 +50,7 @@ class Base_Robot:
     # Build an array of the values
     values = [0, 0, 0, 0]
     for i in range(0, 4):
-      values[i] = math.cos(theta + (((2 * i ) + 1) * math.pi / 4))
+      values[i] = math.sin(theta - (((2 * i ) + 1) * math.pi / 4))
       # Round to make it easier to work with
       values[i] = round(values[i], 4)
     
@@ -76,3 +74,6 @@ class Base_Robot:
     self._OC.off()
     self._OB.off()
     self._OA.off()
+
+if __name__ == "__main__":
+  R = Base_Robot(Brick=False, Debug=True)
