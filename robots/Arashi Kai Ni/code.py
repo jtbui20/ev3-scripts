@@ -63,6 +63,7 @@ while True:
     state = (not state)
     print(state)
     time.sleep(1)
+    
   if state:
     irv = irs.value(0)
     ang = cps.value(0)

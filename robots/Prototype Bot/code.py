@@ -1,17 +1,58 @@
-#!/usr/bin/env 3
+#!/usr/bin/env python3
 
 # We're going to be doing a ton of math
 import math
-import numpy as np
 import time
 # Ev3sim dependency
 # from ev3sim.code_helpers import wait_for_tick
 
 # Make a robot object and assign it some stuff
-from BaseRobot.Base_Robot import Base_Robot
+from Base_Robot import Base_Robot
 
 class Robot(Base_Robot):
   pass
 
 if __name__ == "__main__":
-  R = Robot(Brick=True, Debug=True)
+  R = Robot(Simulator=True, Debug=False)
+  
+  
+  # Calibrate values
+  R.Calibrate(0.5)
+
+  # Do boot up tone
+  R.PlaySound_Boot()
+
+  state = False
+  if R.Simulator:
+    from ev3sim.code_helpers import wait_for_tick
+  while True:
+    if (not R.Simulator):
+      if (R.button.enter):
+        state = not state
+        if (state): R.PlaySound_Boot()
+        else: R.PlaySound_Stop()
+        time.sleep(1)
+    else:
+      state = True
+    
+    if state:
+      # Grab sensor values
+      cp = R.cp.value(0)
+      ir = R.ir.value(0)
+      us_w = R.us_w.distance_centimeters
+      us_h = R.us_h.distance_centimeters
+
+      # Logic stuff here
+      dir = 0
+      if ir in [1,2,3]: dir = -90
+      elif ir in [4,5,6]: dir = 0
+      elif ir in [7,8,9]: dir = 90
+      else: dir = 180
+
+      # Assign movement
+      values = R.RadialMove(dir)
+      values += R.RadialTurn(cp, )
+      R.AssignMotors(values)
+      if (R.Simulator): wait_for_tick()
+    else:
+      R.Stop()

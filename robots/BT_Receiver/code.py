@@ -10,6 +10,8 @@ from pybricks.messaging import BluetoothMailboxClient, TextMailbox
 # Make a robot object and assign it some stuff
 from BaseRobot.Base_Robot import Base_Robot
 
+
+# This robot will be used as the goalie / wall mount
 class Receiver(Base_Robot):
   def __init__(self, target_connection):
     self.__init__()

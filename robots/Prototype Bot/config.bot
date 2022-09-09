@@ -17,28 +17,28 @@ devices:
     position:
     - 4.0
     - 4.0
-    rotation: -45.0
+    rotation: 135.0
     zPos: 3
 - LargeMotor:
     port: outB
     position:
     - 4.0
     - -4.0
-    rotation: -135.0
+    rotation: 45.0
     zPos: 3.5
 - LargeMotor:
     port: outC
     position:
     - -4.0
     - -4.0
-    rotation: -225.0
+    rotation: 315.0
     zPos: 3.75
 - LargeMotor:
     port: outD
     position:
     - -4.0
     - 4.0
-    rotation: -315.0
+    rotation: 225.0
     zPos: 3.875
 - UltrasonicSensor:
     port: in1
