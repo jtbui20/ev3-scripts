@@ -69,20 +69,43 @@ class Base_Robot:
       values[i] = round(values[i], 4)
     
     # Amp it up to the speed that we want
-    amp_ratio = speed/ max(values)
-    values = [amp_ratio * x for x in values]
-    values = [min(100, max(-100, x)) for x in values]
+    values = self.ClampSpeed(values, speed)
 
     if self.Debug:
       print(values)
     
     return values
 
-  def RadialTurn(self, currentAngle, targetAngle, range = 10, speed = 100):
-    target= math.radians(targetAngle)
-    rangeDiff = math.radians(range)
-    targets = [target - rangeDiff, target + rangeDiff]
-    current = math.radians(currentAngle)
+  def ClampSpeed(self, values, speed = 100):
+    # Copy it with an absolutes
+    abs_values = [abs(x) for x in values]
+    high = max(abs_values)
+    if high == 0: return [0, 0, 0, 0]
+    amp_ratio = speed / high
+    values = [amp_ratio * x for x in values]
+    return [min(100, max(-100, x)) for x in values]
+
+  def BindAngle(self, angle):
+    return angle
+
+  def RadialTurn(self, currentAngle, refAngle, targetAngle, spread = 30, speed = 10):
+    # Sample 1
+    # 0 degrees | 300 / 30 range
+    # if 180 - 359, change to -90 - -1
+    currentAngle = self.BindAngle(currentAngle)
+    targetAngle = self.BindAngle(targetAngle)
+
+    targets = [targetAngle - spread, targetAngle + spread]
+    current = currentAngle
+
+    dirAngle = ((currentAngle - refAngle + 180) % 360) - 180
+
+    if dirAngle < -spread:
+      return [speed, 0, speed, 0]
+    elif spread < dirAngle:
+      return [-speed, 0, -speed, 0]
+    else:
+      return [0,0,0,0]
 
   def AssignMotors(self, values):
     self._OA.on(values[0])

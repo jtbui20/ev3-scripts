@@ -12,12 +12,17 @@ from Base_Robot import Base_Robot
 class Robot(Base_Robot):
   pass
 
+def AddMatrix(A, B):
+  return [A[i] + B[i] for i in range(0, len(A))]
+
 if __name__ == "__main__":
   R = Robot(Simulator=True, Debug=False)
   
   
   # Calibrate values
-  R.Calibrate(0.5)
+  # R.Calibrate(0.5)
+  # Root direction is the initial reading
+  rootDir = R.cp.value(0)
 
   # Do boot up tone
   R.PlaySound_Boot()
@@ -29,7 +34,9 @@ if __name__ == "__main__":
     if (not R.Simulator):
       if (R.button.enter):
         state = not state
-        if (state): R.PlaySound_Boot()
+        if (state): 
+          R.PlaySound_Boot()
+          rootDir = R.cp.value(0)
         else: R.PlaySound_Stop()
         time.sleep(1)
     else:
@@ -51,7 +58,9 @@ if __name__ == "__main__":
 
       # Assign movement
       values = R.RadialMove(dir)
-      values += R.RadialTurn(cp, )
+      turn = R.RadialTurn(cp, rootDir, rootDir, spread = 20, speed = 100)
+      values = AddMatrix(values, turn)
+      values = R.ClampSpeed(values, 100)
       R.AssignMotors(values)
       if (R.Simulator): wait_for_tick()
     else:
