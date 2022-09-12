@@ -13,12 +13,9 @@ import math, time
 import threading
 
 class Base_Robot:
-  def __init__(self, Brick = False, Debug = False):
-    self.hasBrick = Brick
+  def __init__(self, Simulator = False, Debug = False):
+    self.Simulator = Simulator
     self.Debug = Debug
-    # If we don't have a brick, don't do brick associated stuff
-    if not Brick:
-      return
 
     # These are fields for our output motors
     self._OA = LargeMotor(OUTPUT_A);
@@ -29,32 +26,37 @@ class Base_Robot:
     if Debug: print("Motors are online")
 
     # These are fields for our input sensors
-    self.USonW = UltrasonicSensor(INPUT_1);
-    self.USonW.mode = self.USonW.MODE_US_DIST_CM
-    self.USonH = UltrasonicSensor(INPUT_4);
-    self.USonH.mode = self.USonH.MODE_US_DIST_CM
-    self.CPSen = Sensor(INPUT_2, driver_name="ht-nxt-compass")
-    self.IRSen = Sensor(INPUT_3, driver_name="ht-nxt-ir-seek-v2")
-    self.IRSen.mode = "AC-ALL"
-    self.button = Button()
-    self.sound = Sound()
+    self.us_w = UltrasonicSensor(INPUT_1);
+    self.us_w.mode = self.us_w.MODE_US_DIST_CM
+    self.us_h = UltrasonicSensor(INPUT_4);
+    self.us_h.mode = self.us_h.MODE_US_DIST_CM
+    self.cp = Sensor(INPUT_2, driver_name="ht-nxt-compass")
+    self.ir = Sensor(INPUT_3, driver_name="ht-nxt-ir-seek-v2")
+    self.ir.mode = "AC-ALL"
+    # Only make if not simulator
+    if not self.Simulator:
+      self.button = Button()
+      self.sound = Sound()
+      self.sound.set_volume(5)
 
     if Debug: print("Sensors are online")
 
   def PlaySound_Boot(self):
+    if self.Simulator: return
     self.sound.play_song(
-      [('C4', 'q'), ('E4', 'q'), ('G4', 'q')]
+      [('C4', 'q'), ('E4', 'q'), ('G4', 'q')], tempo=240
     )
   def PlaySound_Stop(self):
+    if self.Simulator: return
     self.sound.play_song(
-      [('G4', 'q'), ('E4', 'q'), ('C4', 'q')]
+      [('G4', 'q'), ('E4', 'q'), ('C4', 'q')], tempo=240
     )
 
   '''Calibration Process'''
   def Calibrate(self, length):
-    self.CPSen.command("BEGIN-CAL")
+    self.cp.command("BEGIN-CAL")
     time.sleep(length)
-    self.CPSen.command("END-CAL")
+    self.cp.command("END-CAL")
 
   '''Takes an input angle and moves in that direction'''
   def RadialMove(self, angle, speed = 100):
@@ -63,27 +65,54 @@ class Base_Robot:
     # Build an array of the values
     values = [0, 0, 0, 0]
     for i in range(0, 4):
-      values[i] = math.sin(theta - (((2 * i ) + 1) * math.pi / 4))
+      values[i] = math.sin(theta - ((i + 1) * math.pi / 2) - math.pi / 4)
       # Round to make it easier to work with
       values[i] = round(values[i], 4)
     
     # Amp it up to the speed that we want
-    amp_ratio = speed/ max(values)
-    values = [amp_ratio * x for x in values]
-    values = [min(100, max(-100, x)) for x in values]
+    values = self.ClampSpeed(values, speed)
 
     if self.Debug:
       print(values)
+    
+    return values
 
-    # Now we assign it to the motors
-    if self.hasBrick:
-      self._OA.on(-values[0])
-      self._OB.on(-values[1])
-      self._OC.on(-values[2])
-      self._OD.on(-values[3])
+  def ClampSpeed(self, values, speed = 100):
+    # Copy it with an absolutes
+    abs_values = [abs(x) for x in values]
+    high = max(abs_values)
+    if high == 0: return [0, 0, 0, 0]
+    amp_ratio = speed / high
+    values = [amp_ratio * x for x in values]
+    return [min(100, max(-100, x)) for x in values]
+
+  def BindAngle(self, angle):
+    return angle
+
+  def RadialTurn(self, currentAngle, refAngle, targetAngle, spread = 30, speed = 10):
+    # Sample 1
+    # 0 degrees | 300 / 30 range
+    # if 180 - 359, change to -90 - -1
+    currentAngle = self.BindAngle(currentAngle)
+    targetAngle = self.BindAngle(targetAngle)
+
+    targets = [targetAngle - spread, targetAngle + spread]
+    current = currentAngle
+
+    dirAngle = ((currentAngle - refAngle + 180) % 360) - 180
+
+    if dirAngle < -spread:
+      return [speed, 0, speed, 0]
+    elif spread < dirAngle:
+      return [0, -speed, 0, -speed]
+    else:
+      return [0,0,0,0]
+
+  def AssignMotors(self, values):
+    self._OA.on(values[0])
+    self._OB.on(values[1])
+    self._OC.on(values[2])
+    self._OD.on(values[3])
 
   def Stop(self):
-    self._OD.off()  
-    self._OC.off()
-    self._OB.off()
-    self._OA.off()
+    self.AssignMotors([0,0,0,0])
