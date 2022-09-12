@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # We're going to be doing a ton of math
+from logging import root
 import math
 import time
 # Ev3sim dependency
@@ -57,12 +58,9 @@ if __name__ == "__main__":
       else: dir = 180
 
       # Assign movement
-      # values = R.RadialMove(dir)
-      values = [0,0,0,0]
-      turn = R.RadialTurn(cp, rootDir, rootDir, spread = 20, speed = 100)
-      values = AddMatrix(values, turn)
-      values = R.ClampSpeed(values, 100)
-      R.AssignMotors(values)
+      R.motors.RadialMove(dir, speed = 100)
+      R.motors.RadialTurn(cp, rootDir, spread = 20, speed = 100)
+      R.motors.RunMotors()
       if (R.Simulator): wait_for_tick()
     else:
       R.Stop()

@@ -37,6 +37,7 @@ class Base_Robot:
     if not self.Simulator:
       self.button = Button()
       self.sound = Sound()
+      self.sound.set_volume(5)
 
     if Debug: print("Sensors are online")
 
@@ -103,7 +104,7 @@ class Base_Robot:
     if dirAngle < -spread:
       return [speed, 0, speed, 0]
     elif spread < dirAngle:
-      return [-speed, 0, -speed, 0]
+      return [0, -speed, 0, -speed]
     else:
       return [0,0,0,0]
 
