@@ -10,8 +10,6 @@ from ev3dev2.sound import Sound
 # We're going to be doing a ton of math
 import math, time
 
-import threading
-
 class Base_Robot:
   def __init__(self, Simulator = False, Debug = False):
     self.Simulator = Simulator

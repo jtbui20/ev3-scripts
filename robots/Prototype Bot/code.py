@@ -7,7 +7,7 @@ import time
 # from ev3sim.code_helpers import wait_for_tick
 
 # Make a robot object and assign it some stuff
-from Base_Robot import Base_Robot
+from BaseRobot.Base_Robot import Base_Robot
 
 class Robot(Base_Robot):
   pass
@@ -16,7 +16,7 @@ def AddMatrix(A, B):
   return [A[i] + B[i] for i in range(0, len(A))]
 
 if __name__ == "__main__":
-  R = Robot(Simulator=False, Debug=False)
+  R = Robot(Simulator=True, Debug=False)
   
   
   # Calibrate values
@@ -57,12 +57,9 @@ if __name__ == "__main__":
       else: dir = 180
 
       # Assign movement
-      # values = R.RadialMove(dir)
-      values = [0,0,0,0]
-      turn = R.RadialTurn(cp, rootDir, rootDir, spread = 20, speed = 100)
-      values = AddMatrix(values, turn)
-      values = R.ClampSpeed(values, 100)
-      R.AssignMotors(values)
+      R.motors.RadialMove(dir, speed = 100)
+      R.motors.RadialTurn(cp, rootDir, spread = 30, speed = 50)
+      R.motors.RunMotors()
       if (R.Simulator): wait_for_tick()
     else:
       R.Stop()
