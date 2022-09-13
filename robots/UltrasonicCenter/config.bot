@@ -1,0 +1,71 @@
+base_plate:
+  children: []
+  friction: 0.7
+  key: phys_obj
+  mass: 5
+  restitution: 0.2
+  visual:
+    fill: '#878E88'
+    name: Circle
+    radius: 8
+    stroke: '#ffffff'
+    stroke_width: 0.1
+    zPos: 1
+devices:
+- LargeMotor:
+    port: outA
+    position:
+    - 4.0
+    - 4.0
+    rotation: 135.0
+    zPos: 3
+- LargeMotor:
+    port: outB
+    position:
+    - 4.0
+    - -4.0
+    rotation: 45.0
+    zPos: 3.5
+- LargeMotor:
+    port: outC
+    position:
+    - -4.0
+    - -4.0
+    rotation: 315.0
+    zPos: 3.75
+- LargeMotor:
+    port: outD
+    position:
+    - -4.0
+    - 4.0
+    rotation: 225.0
+    zPos: 3.875
+- UltrasonicSensor:
+    port: in1
+    position:
+    - 0.0
+    - 7.0
+    rotation: 90.0
+    zPos: 3.9375
+- UltrasonicSensor:
+    port: in4
+    position:
+    - -7.0
+    - 0.0
+    rotation: 180.0
+    zPos: 3.96875
+- InfraredSensor:
+    port: in3
+    position:
+    - 3.0
+    - 0.0
+    rotation: 0
+    zPos: 3.984375
+- CompassSensor:
+    port: in2
+    position:
+    - -2.0
+    - 0.0
+    rotation: 0
+    zPos: 3.9921875
+type: python

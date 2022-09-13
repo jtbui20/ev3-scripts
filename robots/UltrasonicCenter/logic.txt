@@ -1,0 +1,28 @@
+facing angle = horizontal (hori) or vertical (vert) (normal or shift)
+
+get sensors (back, left)
+
+if we're facing hori / norm
+  let back = back
+  let side = side
+else if we're facing vert / shift
+  let side = back
+  let back = side
+
+---------- flip check
+if side is too far away
+  // Note: we "must" be on the other side of the field, so we'll flip
+  flip our facing
+  nullify this check for 0.5 seconds
+else if we're close to the wall
+  do nothing really
+
+if side is too close
+  move out towards the center
+
+if we have the ball
+  do advanced goal shooting
+
+if ball is outside of field
+  hang around inside
+  (there is no reason to be outside of the field)
