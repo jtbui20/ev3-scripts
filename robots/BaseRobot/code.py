@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # We're going to be doing a ton of math
-from logging import root
 import math
 import time
 # Ev3sim dependency
@@ -26,7 +25,7 @@ if __name__ == "__main__":
   rootDir = R.cp.value(0)
 
   # Do boot up tone
-  R.PlaySound_Boot()
+  R.sound.PlaySound("Boot")
 
   state = False
   if R.Simulator:
@@ -36,9 +35,9 @@ if __name__ == "__main__":
       if (R.button.enter):
         state = not state
         if (state): 
-          R.PlaySound_Boot()
+          R.sound.PlaySound("Boot")
           rootDir = R.cp.value(0)
-        else: R.PlaySound_Stop()
+        else: R.sound.PlaySound("Boot", reverse=True)
         time.sleep(1)
     else:
       state = True

@@ -9,7 +9,8 @@ from ev3dev2.sound import Sound
 # We're going to be doing a ton of math
 import math, time
 
-from robots.BaseRobot.Motors import MotorModule
+from BaseRobot.Motors import MotorModule
+from BaseRobot.SoundModule import SoundModule
 
 class Base_Robot:
   def __init__(self, Simulator = False, Debug = False):
@@ -30,24 +31,17 @@ class Base_Robot:
     # Only make if not simulator
     if not self.Simulator:
       self.button = Button()
-      self.sound = Sound()
-      self.sound.set_volume(5)
+      self.sound = SoundModule(Simulator= self.Simulator)
 
     if Debug: print("Sensors are online")
 
-  def PlaySound_Boot(self):
-    if self.Simulator: return
-    self.sound.play_song(
+  def GenerateSounds(self):
+    self.sound.NewPattern("Boot",
       [('C4', 'q'), ('E4', 'q'), ('G4', 'q')], tempo=240
-    )
-  def PlaySound_Stop(self):
-    if self.Simulator: return
-    self.sound.play_song(
-      [('G4', 'q'), ('E4', 'q'), ('C4', 'q')], tempo=240
     )
 
   '''Calibration Process'''
   def Calibrate(self, length):
-    self.cp.command("BEGIN-CAL")
+    self.cp.command = "BEGIN-CAL"
     time.sleep(length)
-    self.cp.command("END-CAL")
+    self.cp.command ="END-CAL"

@@ -6,6 +6,7 @@ class SoundModule:
     self.simulator = Simulator
     # Default to off if simulator is active
     self.active = not Simulator
+    self.sound: Sound = None
 
     if not self.simulator:
       self.sound = Sound()
@@ -18,10 +19,12 @@ class SoundModule:
   def Disable(self):
     self.active = False
 
-  def NewPattern(self, name: str, pattern: List[Tuple(str, str)], tempo = 120, delay = 0.05):
+  def NewPattern(self, name: str, pattern: List[Tuple[str, str]], tempo = 120, delay = 0.05):
     self.Patterns[name] = (pattern, tempo, delay)
 
-  def PlaySound(self, name: str):
+  def PlaySound(self, name: str, reverse=False):
     if self.active:
       song = self.Patterns[name]
-      self.sound.play_song(song[0], song[1], song[2])
+      pattern = song[0]
+      if reverse: pattern = reversed(pattern)
+      self.sound.play_song(pattern, song[1], song[2])
