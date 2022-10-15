@@ -7,7 +7,7 @@ import time
 # from ev3sim.code_helpers import wait_for_tick
 
 # Make a robot object and assign it some stuff
-from BaseRobot.Base_Robot import Base_Robot
+from Base_Robot import Base_Robot
 
 class Robot(Base_Robot):
   pass
