@@ -109,7 +109,7 @@ class MovementInteractor(PygameGuiInteractor):
         # self.ui_theme._load_element_colour_data_from_theme("colours", f"preset-button", generic_button_data)
         # self.ui_theme._load_element_font_data_from_theme("font", f"preset-button", generic_button_data)
         # self.ui_theme._load_element_misc_data_from_theme("misc", f"preset-button", generic_button_data)
-        # self.ui_theme._load_fonts()
+        self.ui_theme._load_fonts()
 
         button_top_inc = self._size[1] / 5
         button_right = self._size[0] * 15 / 16
