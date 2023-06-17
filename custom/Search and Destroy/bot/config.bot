@@ -19,6 +19,20 @@ base_plate:
     - - -5.6568542494923815
       - 5.656854249492379
     zPos: 1
-devices: []
-robot_class: ev3sim.robot.AngleSnapRobot
+devices:
+- LargeMotor:
+    port: outA
+    position:
+    - 4.0
+    - 0.0
+    rotation: 0
+    zPos: 3
+- LargeMotor:
+    port: outB
+    position:
+    - 0.0
+    - -4.0
+    rotation: -90.0
+    zPos: 3.5
 hidden: true
+robot_class: ev3sim.robot.AngleSnapRobot
