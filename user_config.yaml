@@ -1,0 +1,8 @@
+app:
+  FPS: 30
+  console_log: true
+  send_crash_reports: false
+screen:
+  SCREEN_HEIGHT: 720
+  SCREEN_WIDTH: 960
+  theme: default_theme.json
