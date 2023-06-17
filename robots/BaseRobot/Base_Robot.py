@@ -35,10 +35,24 @@ class Base_Robot:
 
     if Debug: print("Sensors are online")
 
+    self.motors.BindCompass(self.cp)
+  
   def GenerateSounds(self):
     self.sound.NewPattern("Boot",
       [('C4', 'q'), ('E4', 'q'), ('G4', 'q')], tempo=240
     )
+
+    self.sound.NewPattern("Stop",
+      [('G4', 'q'), ('E4', 'q'), ('C4', 'q')], tempo=240
+    )
+
+  def PlaySound_Boot(self):
+    if self.Simulator: return
+    self.sound.PlaySound("Boot")
+
+  def PlaySound_Stop(self):
+    if self.Simulator: return
+    self.sound.PlaySound("Stop")
 
   '''Calibration Process'''
   def Calibrate(self, length):
