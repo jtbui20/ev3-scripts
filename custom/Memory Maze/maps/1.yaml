@@ -1,0 +1,5 @@
+dimensions: [5, 2]
+spawn: [0, 0]
+passcode: GGGRRBG
+colours: GGRB__GRGE
+walls: "**.*.*.*.*.*...*.*...*.****"
