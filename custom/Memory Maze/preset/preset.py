@@ -185,10 +185,10 @@ class MazeInteractor(PygameGuiInteractor):
                 }
             }
         }
-        self.ui_theme._load_element_colour_data_from_theme("colours", f"preset-button", generic_button_data)
-        self.ui_theme._load_element_font_data_from_theme("font", f"preset-button", generic_button_data)
-        self.ui_theme._load_element_misc_data_from_theme("misc", f"preset-button", generic_button_data)
-        self.ui_theme._load_fonts()
+        # self.ui_theme._load_element_colour_data_from_theme("colours", f"preset-button", generic_button_data)
+        # self.ui_theme._load_element_font_data_from_theme("font", f"preset-button", generic_button_data)
+        # self.ui_theme._load_element_misc_data_from_theme("misc", f"preset-button", generic_button_data)
+        # self.ui_theme._load_fonts()
 
         def event(x):
             self.loadMap(f"maps/{x}.yaml")
