@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from time import sleep
-from BaseRobot.Base_Robot import Base_Robot
-
+from robots.BaseRobot.Base_Robot import Base_Robot
 import threading
 
   

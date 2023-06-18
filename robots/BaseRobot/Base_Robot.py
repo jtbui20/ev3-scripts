@@ -5,11 +5,10 @@
 from ev3dev2.sensor import Sensor, INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import UltrasonicSensor
 from ev3dev2.button import Button
-from ev3dev2.sound import Sound
 # We're going to be doing a ton of math
 import math, time
 
-from BaseRobot.Motors import MotorModule
+from BaseRobot.Motors import OmniWheelMotorModule
 from BaseRobot.SoundModule import SoundModule
 
 class Base_Robot:
@@ -18,7 +17,7 @@ class Base_Robot:
     self.Debug = Debug
 
     # These are fields for our output motors
-    self.motors = MotorModule(debug=Debug)
+    self.motors = OmniWheelMotorModule(debug=Debug)
 
     # These are fields for our input sensors
     self.us_w = UltrasonicSensor(INPUT_1);
@@ -35,7 +34,7 @@ class Base_Robot:
 
     if Debug: print("Sensors are online")
 
-    self.motors.BindCompass(self.cp)
+    self.motors.BindGetNorth(lambda: self.cp.value(0))
   
   def GenerateSounds(self):
     self.sound.NewPattern("Boot",

@@ -4,7 +4,7 @@
 import math
 import time
 # Ev3sim dependency
-# from ev3sim.code_helpers import wait_for_tick
+from ev3sim.code_helpers import wait_for_tick, is_ev3, is_sim
 
 # Make a robot object and assign it some stuff
 from robots.BaseRobot.Base_Robot import Base_Robot
@@ -16,38 +16,38 @@ def AddMatrix(A, B):
   return [A[i] + B[i] for i in range(0, len(A))]
 
 if __name__ == "__main__":
-  R = Robot(Simulator=True, Debug=False)
-  
+  robot = Robot(Simulator=is_sim, Debug=False)
   
   # Calibrate values
   # R.Calibrate(0.5)
   # Root direction is the initial reading
-  rootDir = R.cp.value(0)
+  rootDir = robot.cp.value(0)
+
+  robot.motors.BindGetNorth(lambda: robot.cp.value(0))
 
   # Do boot up tone
-  R.PlaySound_Boot()
+  robot.PlaySound_Boot()
 
   state = False
-  if R.Simulator:
-    from ev3sim.code_helpers import wait_for_tick
+
   while True:
-    if (not R.Simulator):
-      if (R.button.enter):
+    if (not is_sim):
+      if (robot.button.enter):
         state = not state
         if (state): 
-          R.PlaySound_Boot()
-          rootDir = R.cp.value(0)
-        else: R.PlaySound_Stop()
+          robot.PlaySound_Boot()
+          rootDir = robot.cp.value(0)
+        else: robot.PlaySound_Stop()
         time.sleep(1)
     else:
       state = True
     
     if state:
       # Grab sensor values
-      cp = R.cp.value(0)
-      ir = R.ir.value(0)
-      us_w = R.us_w.distance_centimeters
-      us_h = R.us_h.distance_centimeters
+      cp = robot.cp.value(0)
+      ir = robot.ir.value(0)
+      us_w = robot.us_w.distance_centimeters
+      us_h = robot.us_h.distance_centimeters
 
       # Logic stuff here
       dir = 0
@@ -57,9 +57,8 @@ if __name__ == "__main__":
       else: dir = 180
 
       # Assign movement
-      R.motors.RadialMove(dir, speed = 100)
-      R.motors.RadialTurn(cp, rootDir, spread = 30, speed = 50)
-      R.motors.RunMotors()
-      if (R.Simulator): wait_for_tick()
+      robot.motors.RadialMove(dir, speed = 100)
+      robot.motors.RunMotors()
+      if (robot.Simulator): wait_for_tick()
     else:
-      R.Stop()
+      robot.Stop()
