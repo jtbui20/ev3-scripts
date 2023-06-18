@@ -1,0 +1,109 @@
+base_plate:
+  children:
+  - collider: inherit
+    friction: 0.8
+    key: phys_obj-child-0
+    physics: true
+    position:
+    - 11.0
+    - 0.0
+    restitution: 0.2
+    type: object
+    visual:
+      fill: '#878E88'
+      height: 6
+      name: Rectangle
+      width: 1
+      zPos: 2.07
+  - collider: inherit
+    friction: 0.8
+    key: phys_obj-child-1
+    physics: true
+    position:
+    - 12.0
+    - 4.0
+    restitution: 0.2
+    rotation: 60
+    type: object
+    visual:
+      fill: '#878E88'
+      height: 1
+      name: Rectangle
+      width: 4
+      zPos: 2.07
+  - collider: inherit
+    friction: 0.8
+    key: phys_obj-child-2
+    physics: true
+    position:
+    - 12.0
+    - -4.0
+    restitution: 0.2
+    rotation: -60
+    type: object
+    visual:
+      fill: '#878E88'
+      height: 1
+      name: Rectangle
+      width: 4
+      zPos: 2.07
+  collider: inherit
+  friction: 0.8
+  key: phys_obj
+  mass: 5
+  restitution: 0.2
+  visual:
+    fill: '#878E88'
+    name: Circle
+    radius: 11
+    stroke: '#ffffff'
+    stroke_width: 0.1
+    zPos: 2
+devices:
+- LargeMotor:
+    port: outA
+    position:
+    - -6
+    - 6
+    rotation: 45
+- LargeMotor:
+    port: outB
+    position:
+    - 6
+    - 6
+    rotation: -45
+- LargeMotor:
+    port: outC
+    position:
+    - 6
+    - -6
+    rotation: 45
+- LargeMotor:
+    port: outD
+    position:
+    - -6
+    - -6
+    rotation: -45
+- InfraredSensor:
+    port: in1
+    position:
+    - 5
+    - 0
+    rotation: 0
+- ColorSensor:
+    port: in2
+    position:
+    - 0.0
+    - 0.0
+    rotation: 180
+- UltrasonicSensor:
+    port: in3
+    position:
+    - 0
+    - 10
+    rotation: 90
+- CompassSensor:
+    port: in4
+    position:
+    - 0
+    - 0
