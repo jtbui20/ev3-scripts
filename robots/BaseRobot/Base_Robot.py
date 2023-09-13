@@ -6,7 +6,7 @@ from ev3dev2.sensor import Sensor, INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import UltrasonicSensor
 from ev3dev2.button import Button
 # We're going to be doing a ton of math
-import math, time
+import time
 
 from BaseRobot.Motors import OmniWheelMotorModule
 from BaseRobot.SoundModule import SoundModule
