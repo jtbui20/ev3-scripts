@@ -1,57 +1,59 @@
 from ev3dev2.motor import (
-    LargeMotor,
+    Motor,
     OUTPUT_A,
     OUTPUT_B,
     OUTPUT_C,
     OUTPUT_D,
-    SpeedPercent,
-    Motor,
 )
-from typing import List
+from time import sleep
 
 default_motor_configuration = [
-    (OUTPUT_A, LargeMotor),
-    (OUTPUT_B, LargeMotor),
-    (OUTPUT_C, LargeMotor),
-    (OUTPUT_D, LargeMotor),
+    {"Port": OUTPUT_A},
+    {"Port": OUTPUT_B},
+    {"Port": OUTPUT_C},
+    {"Port": OUTPUT_D},
 ]
 
-class MotorModule:
-    """Master class for motor related actions."""
 
-    def __init__(self, motor_configuration=default_motor_configuration, debug=False):
-        self.motorReferences: List[Motor] = []
-        for port, motorType in motor_configuration:
-            self.motorReferences.append(motorType(port))
+class EV3Motor:
+    def __init__(self, config):
+        self.port = config.get("Port", None)
+        self.__motor = None  # type: Motor
+        self.__error = False
 
-        self.debugMode = debug
-        self.finalValues = [0, 0, 0, 0]
+        self.CreateMotorAdapter()
 
-        if self.debugMode:
-            print("Motors are online")
+    def CreateMotorAdapter(self):
+        try:
+            self.__motor = Motor(self.port)
+            self.__motor.stop_action = self.__motor.STOP_ACTION_HOLD
+            return self
+        except Exception as e:
+            raise e
 
-    @staticmethod
-    def AddMatrix(A, B):
-        return [A[i] + B[i] for i in range(0, len(A))]
+    def HandleErrorStop(self):
+        try:
+            self.Off(True)
+        except:
+            self.__error = True
+            print("Motor {port} has disconnected".format(port=self.port))
 
-    def RunMotors(self, speed=100):
-        """Runs the output of computed values to the motors"""
-        self.finalValues = self.ClampSpeed(self.finalValues, speed)
-        for motor, value in zip(self.motorReferences, self.finalValues):
-            motor.off() if value == 0 else motor.on(SpeedPercent(value))
-        self.finalValues = [0, 0, 0, 0]
+            while self.__error:
+                try:
+                    self.CreateMotorAdapter()
+                    self.__error = False
+                except Exception as e:
+                    print("Please reconnect motor {port}".format(port=self.port))
+                    sleep(1)
+                    continue
 
-    def StopMotors(self):
-        """Turns off all motors and sets the final values to 0"""
-        for motor in self.motorReferences:
-            motor.off()
-        self.finalValues = [0, 0, 0, 0]
+    def On(self, speed):
+        self.__motor.on(speed)
 
-    @staticmethod
-    def ClampSpeed(values: List[int], speed: int = 100) -> List[int]:
-        """Changes the highest motor speed to the speed specified while maintaining the ratio of the other motors"""
-        high = max([abs(x) for x in values])
-        if high == 0:
-            return values
-        ratio = speed / high
-        return [min(100, max(-100, ratio * x)) for x in values]
+    def Off(self, mode):
+        mode = True if mode in [1, "BRAKE", True] else False
+        self.__motor.stop()
+
+    @property
+    def isStalled(self):
+        return self.__motor.is_stalled
